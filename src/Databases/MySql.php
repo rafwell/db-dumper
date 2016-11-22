@@ -21,6 +21,7 @@ class MySql extends DbDumper
     protected $includeTables = array();
     protected $excludeTables = array();
     protected $timeout;
+    protected $extraOption = '';
 
     /**
      * @return string
@@ -126,6 +127,18 @@ class MySql extends DbDumper
         }
 
         $this->dumpBinaryPath = $dumpBinaryPath;
+
+        return $this;
+    }
+
+    /**
+     * @param string $extraOption
+     *
+     * @return \Spatie\DbDumper\Databases\Mysql
+     */
+    public function setExtraOption($extraOption)
+    {
+        $this->extraOption = $extraOption;
 
         return $this;
     }
@@ -274,7 +287,11 @@ class MySql extends DbDumper
             $command[] = implode(' ', $this->includeTables);
         }
 
-        $command[] = "> \"{$dumpFile}\"";
+        if($this->extraOption){
+            $command[] = $this->extraOption;
+        }
+
+        $command[] = "> \"{$dumpFile}\"";        
 
         return implode(' ', $command);
     }
